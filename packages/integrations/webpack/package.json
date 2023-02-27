@@ -9,7 +9,7 @@
     "dist"
   ],
   "license": "MIT",
-  "private": "false",
+  "private": false,
   "scripts": {
     "build": "pnpm build:commonjs && pnpm build:esm",
     "build:commonjs": "rimraf dist/cjs && tsc --module commonjs --outDir dist/cjs",

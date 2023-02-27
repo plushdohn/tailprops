@@ -1,6 +1,5 @@
 {
   "name": "website",
-  "version": "independent",
   "private": true,
   "scripts": {
     "dev": "next dev",
