@@ -7,7 +7,7 @@ import { GetStartedLandingScreen } from "@/content/LandingScreens/GetStartedLand
 
 export default function Home() {
   return (
-    <div tw="w-screen flex flex-col items-center">
+    <div tw="flex flex-col items-center">
       <NavBar />
       <main tw="max-w-5xl w-screen px-6">
         <ScrollUp />
