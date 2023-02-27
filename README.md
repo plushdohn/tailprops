@@ -5,6 +5,10 @@
 
 ---
 
+> **Warning**
+>
+> Tailprops is just starting to form. It is not yet ready for production use. We appreciate you tinkering with it, feel free to provide feedback to make it better for everyone.
+
 ## Overview
 
 Tailprops is a set of tools that allow you to write Tailwind classes in this way:
