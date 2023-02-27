@@ -1,0 +1,34 @@
+# tailprops-next
+
+**tailprops-next** is the Next.js integration for the Tailprops library.
+
+## Installation
+
+Install Tailprops and the Next wrapper as dev dependencies:
+
+```bash
+npm install -D tailprops tailprops-next
+```
+
+Then, wrap your config in your `next.config.js`:
+
+```js
+// next.config.js
+const { withTailprops } = require("tailprops-next"); // Import tailprops plugin
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+};
+
+module.exports = withTailprops(nextConfig); // Wrap your config in withTailprops
+```
+
+Lastly, add typings and the Tailwind transform by running:
+
+```bash
+npx tailprops init react
+```
+
+> Looking for an example? This docs website is a Next 13 app using Tailprops.
+> Check out the [source code](https://github.com/plushdohn/tailprops/apps/website) on GitHub.
