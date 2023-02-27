@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import React from "react";
 import { DownArrow } from "../Icons/DownArrowIcon";
 
@@ -10,15 +9,13 @@ type Props = {
 };
 
 export const Scroller = (props: Props) => {
-  const router = useRouter();
-
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     const el = document.querySelector(props.href);
 
     if (el) {
       e.preventDefault();
       el.scrollIntoView({ behavior: "smooth" });
-      router.replace(props.href);
+      window.history.replaceState(null, "", props.href);
     }
   };
 
