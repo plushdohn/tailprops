@@ -1,0 +1,26 @@
+---
+title: IDE Support
+description: How to get IDE support for Tailprops
+sort: 3
+---
+
+A smooth editor experience is something we take at heart. Some integrations work better than others and this page will document how they work.
+
+## VS Code
+
+The guys over at Tailwind made their VS Code plugin incredibly versatile.
+
+It's a bit of manual work, but in order to get autocompletion for Tailprops you just change the setting `tailwindCSS.classAttributes` to include the props you want to use.
+
+This might improve in the future if the VS Code plugin ever supports RegEx in
+the class attributes setting.
+
+#### Step-by-step guide:
+
+Click on the gear wheel in the bottom left corner of the editor and select "Settings". Search for "tailwind class attributes" and add the props you want to use to the list.
+
+Most commonly you would start with `tw` and one for each breakpoint you use: `tw-sm`, `tw-md`, `tw-lg`, `tw-xl`. Then you gradually add more as you need them.
+
+## WebStorm
+
+WebStorm ships with its own Tailwind plugin and unfortunately for now it doesn't seem to support custom class attributes. We can only hope said feature gets requested enough for it to be provided by default.

@@ -1,0 +1,90 @@
+---
+title: Usage
+description: How to use the library
+sort: 2
+---
+
+## Quirks
+
+There are two main "quirks" you'll need to know when using this library.
+
+### Tailprops only transform code inside double quotes
+
+Our transpiler **doesn't transform code inside single quotes or backticks** (for template literals).
+
+This was a deliberate decision for three reasons:
+
+- Implementing new frameworks is easier (since our parsing logic gets simpler)
+- It further discourages [prop forging](#creating-dynamic-properties)
+- Allows you to opt out of our transformation by writing strings in template literals
+
+### Tailprops modifiers use underscores instead of hyphens
+
+Tailwind has some modifiers like `first-child:` or `prose-p` that use multiple words separated by a hyphen, but in Tailprops we use the hyphens as the modifier separator.
+
+So to obtain this:
+
+```html
+<div class="first-child:bg-red-500 prose-p:bg-white" />
+```
+
+You have to use these Tailprops (note the underscores):
+
+```html
+<div tw-first_child="bg-red-500" tw-prose_p="bg-white" />
+```
+
+## How to pass Tailprops to custom components
+
+Our parser greedily looks for elements that contain attributes that start with `tw` in your file, it then deletes those attributes and appends (or creates) the class attribute on that element.
+
+This means that even for your custom components, when you write something like this:
+
+```jsx
+<CustomComponent tw="bg-black" />
+```
+
+The compiler will turn it into this:
+
+```jsx
+<CustomComponent class="bg-glack" />
+```
+
+So the only thing you need to do is make sure that your component accepts an optional `class` (or `className`) prop and that it passes it down to the related element.
+
+See this example in React:
+
+```tsx
+const CustomComponent = ({ className }) => (
+  <div className={className}>Hello world</div>
+);
+```
+
+```jsx
+// Now this will work
+<CustomComponent tw="bg-black" />
+```
+
+## Creating dynamic properties
+
+One thing we can't do is "forge" properties, for example:
+
+```tsx
+<div
+  tw={`bg:${pinkTheme ? "pink" : "black"}`} // This will most likely never be supported
+/>
+```
+
+This limitation [also exists in Tailwind](https://tailwindcss.com/docs/content-configuration#dynamic-class-names). We can't support it because your property now depends on a variable which in turn may depend on your framework's reactivity system, something we can't rely on at compile-time.
+
+For most of these cases, you can just extract the property name and change the condition to this:
+
+```tsx
+<div tw-hover={pinkTheme ? "bg-pink" : "bg-black"} />
+```
+
+Which will compile to a ternary for the class attribute with the correct modifier:
+
+```tsx
+<div class={pinkTheme ? "hover:bg-pink" : "hover:bg-black"} />
+```

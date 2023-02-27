@@ -1,0 +1,56 @@
+---
+title: Overview
+description: Introducing Tailprops
+sort: 0
+---
+
+Tailprops is a set of tools that allow you to write Tailwind classes in this way:
+
+```jsx
+<div
+  tw="flex flex-col bg-red-500"
+  tw-desktop="flex-row" // Responsive breakpoints
+  tw-dark-focus-hover="bg-blue-500" // Or any combination of Tailwind modifiers
+/>
+```
+
+It works as a compile step, hooking into your bundler and transforming the props into the actual Tailwind classes.
+
+## Features
+
+- Typescript compatible
+- Supports all Tailwind modifiers
+- No runtime and no footprint
+
+## Why?
+
+Tailprops aims to make styling with Tailwind less verbose and more expressive. Depending on the case, this library can save a lot space in your markup, not only by splitting all responsive breakpoints into multiple lines, but also by avoiding duplication of modifiers.
+
+Take a look at this example:
+
+```jsx
+<div class="max-w-full prose prose-invert prose-a:text-blue-500 prose-pre:p-0 prose-pre:m-0 prose-code:bg-gray-800 prose-code:text-blue-300 prose-code:text-sm prose-code:rounded-sm prose-code:before:hidden prose-code:after:hidden" />
+```
+
+Those are the compiled classes for the div that contains the markdown for this page, and that's how I would've had to write them had I not been using Tailprops. Here's what the source code looks like instead:
+
+```jsx
+<div
+  tw="max-w-full prose prose-invert"
+  tw-prose_a="text-blue-500"
+  tw-prose_pre="p-0 m-0"
+  tw-prose_code="bg-gray-800 text-blue-300 text-sm rounded-sm before:hidden after:hidden"
+/>
+```
+
+You may argue it's only splitting the classes into multiple lines, but it's not just that.
+
+Not only there are way fewer characters in the source code making it feel less cluttered, but each string of classes is compartmentalized to its own prop. This does wonders for readability and code review. The intent of each style is much clearer.
+
+## Why not?
+
+This library provides some convenience, but it's tightly linked to the bundling process. We can't support every single framework and every single bundler, and there are _many_ out there. It also requires more setup and can feel a little more intrusive on your project than just using Tailwind classes directly.
+
+## Integrations
+
+Head over to the [Installation](/docs/installation) page to see how to integrate Tailprops with your project.

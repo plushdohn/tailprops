@@ -1,0 +1,21 @@
+{
+  "typescript.tsdk": "../../node_modules/.pnpm/typescript@4.9.5/node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "tailwindCSS.classAttributes": [
+    "class",
+    "className",
+    "ngClass",
+    "tw",
+    "tw-hover",
+    "tw-active",
+    "tw-visited",
+    "tw-focus",
+    "tw-disabled",
+    "tw-xs",
+    "tw-sm",
+    "tw-md",
+    "tw-lg",
+    "tw-xl",
+    "tw-2xl"
+  ]
+}

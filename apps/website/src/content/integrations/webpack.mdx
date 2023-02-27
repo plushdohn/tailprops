@@ -1,0 +1,39 @@
+---
+title: Webpack
+description: Adding Tailprops to a Webpack project
+sort: 3
+---
+
+<Note>
+  For now, our Webpack plugin supports React and Preact. We're working on adding
+  support for other frameworks.
+</Note>
+
+## Installation
+
+Install Tailprops and the Webpack plugin as dev dependencies:
+
+```bash
+npm install -D tailprops tailprops-webpack-plugin
+```
+
+Then, add the plugin to your `webpack.config.js`:
+
+```js
+// webpack.config.js
+const { TailpropsWebpackPlugin } = require("tailprops-webpack-plugin");
+
+module.exports = {
+  // ...
+  plugins: [
+    // ...
+    new TailpropsWebpackPlugin(), // Add tailprops to your plugins
+  ],
+};
+```
+
+Lastly, add typings and the Tailwind transform by running:
+
+```bash
+npx tailprops init react # or preact
+```

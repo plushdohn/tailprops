@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/**
+ * -------------------------------------
+ * ANIMATIONS
+ * -------------------------------------
+ */
+
+.up-and-down {
+  animation: upAndDown 0.5s ease-in-out infinite;
+}
+
+@keyframes upAndDown {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-0.1rem);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}

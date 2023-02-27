@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "lib": ["ES2020"],
+    "downlevelIteration": true,
+    "target": "ES6",
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "declaration": true,
+    "sourceMap": true,
+    "outDir": "dist",
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "strict": true
+  },
+  "exclude": ["node_modules", "dist"]
+}
