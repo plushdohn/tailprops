@@ -1,3 +1,4 @@
+<br />
 <div align="center"><img src="https://tailprops.dev/logo.png" width="500" /></div>
 <br/>
 <div align="center">Empower your framework's components with custom props for Tailwind styles.</div>
