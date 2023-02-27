@@ -10,6 +10,9 @@
   ],
   "license": "MIT",
   "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "pnpm build:commonjs && pnpm build:esm",
     "build:commonjs": "rimraf dist/cjs && tsc --module commonjs --outDir dist/cjs",
