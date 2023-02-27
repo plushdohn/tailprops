@@ -6,7 +6,11 @@
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "types": "./dist/esm/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "license": "MIT",
+  "private": "false",
   "scripts": {
     "build": "pnpm build:commonjs && pnpm build:esm",
     "build:commonjs": "rimraf dist/cjs && tsc --module commonjs --outDir dist/cjs",

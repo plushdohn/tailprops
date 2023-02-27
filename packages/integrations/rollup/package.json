@@ -5,7 +5,11 @@
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "types": "./dist/esm/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "license": "MIT",
+  "private": "false",
   "scripts": {
     "build": "pnpm build:commonjs && pnpm build:esm",
     "build:commonjs": "rimraf dist/cjs && tsc --module commonjs --outDir dist/cjs",
@@ -15,6 +19,9 @@
   },
   "dependencies": {
     "tailprops": "workspace:^0.0.1"
+  },
+  "peerDependencies": {
+    "rollup": "^3.15.0"
   },
   "devDependencies": {
     "@types/jest": "^29.4.0",
