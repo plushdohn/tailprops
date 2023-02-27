@@ -10,7 +10,8 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "test": "turbo run test",
-    "coverage": "turbo run coverage"
+    "coverage": "turbo run coverage",
+    "publish-packages": "turbo run test && changeset && changeset publish"
   },
   "devDependencies": {
     "turbo": "latest"
