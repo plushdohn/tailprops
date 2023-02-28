@@ -37,7 +37,7 @@
     "zustand": "^4.3.4"
   },
   "devDependencies": {
-    "tailprops": "^0.2.0",
-    "tailprops-next": "^0.2.0"
+    "tailprops": "^0.2.1",
+    "tailprops-next": "^0.2.1"
   }
 }
