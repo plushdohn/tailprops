@@ -1,7 +1,9 @@
 import { tailpropsPlugin } from "../src/index";
 
 const mockedTransformContext = {
-  watchMode: true,
+  meta: {
+    watchMode: true,
+  },
 } as any;
 
 describe("rollup plugin", () => {

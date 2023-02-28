@@ -56,16 +56,17 @@ function transformFunctionBlock(ast, options) {
     const classNodes = {};
     traverseOnFunctionExpression(ast, (functionPath) => {
         subTraverseOnCallExpression(functionPath, options.attributeFunctionId, (callPath) => {
+            const { node } = callPath;
+            if (node.arguments[0].type !== "Identifier") {
+                console.log("Unexpected non-identifier in attribute addition function:", JSON.stringify(node.arguments[0]));
+                return;
+            }
             const tailprop = tryGetCallExpressionAsTailprop(callPath, options.attributeFunctionId);
             if (tailprop !== null) {
-                subTraverseOnStringLiterals(callPath, tailprop.attribute, (path) => {
-                    const properties = (0, utils_1.getTailwindPropertiesInString)(path.node.value);
-                    path.node.value = (0, utils_1.joinPropertiesUsingModifiers)(properties, tailprop.modifiers);
-                });
-                const currentTailpropNodes = tailpropNodes[tailprop.elementName] || [];
+                const currentProps = tailpropNodes[tailprop.elementName] || [];
                 tailpropNodes[tailprop.elementName] = [
-                    ...currentTailpropNodes,
-                    callPath.node.arguments[2],
+                    ...currentProps,
+                    tailprop.prop,
                 ];
                 return callPath.remove();
             }
@@ -96,20 +97,11 @@ function transformFunctionBlock(ast, options) {
                 t.stringLiteral(options.classAttributeKeyword),
                 mergeExpressionsWithSpaces([
                     ...(classNodes[element] ? [classNodes[element].expression] : []),
-                    ...tailprops,
+                    ...tailprops.map((p) => t.stringLiteral(p)),
                 ]),
             ]));
         }
     });
-}
-function subTraverseOnStringLiterals(path, except, callback) {
-    (0, traverse_1.default)(path.node, {
-        StringLiteral(path) {
-            if (path.node.value !== except) {
-                callback(path);
-            }
-        },
-    }, path.scope, path.state, path.parentPath);
 }
 function tryGetCallExpressionAsTailprop(path, attributeFunctionId) {
     if (path.node.callee.type === "Identifier" &&
@@ -117,10 +109,13 @@ function tryGetCallExpressionAsTailprop(path, attributeFunctionId) {
         path.node.arguments[0].type === "Identifier" &&
         path.node.arguments[1].type === "StringLiteral" &&
         path.node.arguments[1].value.startsWith("tw")) {
+        if (path.node.arguments[2].type !== "StringLiteral")
+            throw new Error("Expressions in Tailprops are not supported! Please use a flat string literal or move the expression to the class attribute.");
+        const modifiers = (0, utils_1.getTailwindModifiersInAttribute)(path.node.arguments[1].value);
+        const properties = (0, utils_1.getTailwindPropertiesInString)(path.node.arguments[2].value);
         return {
-            modifiers: (0, utils_1.getTailwindModifiersInAttribute)(path.node.arguments[1].value),
             elementName: path.node.arguments[0].name,
-            attribute: path.node.arguments[1].value,
+            prop: (0, utils_1.joinPropertiesUsingModifiers)(properties, modifiers),
         };
     }
     return null;

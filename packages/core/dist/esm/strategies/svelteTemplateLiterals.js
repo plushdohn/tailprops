@@ -50,7 +50,9 @@ function transformHtmlTag(tag, options) {
 function findTailpropsInTag(tag, attributeFunctionIdentifier) {
     const staticTailprops = findStaticTailpropsInTag(tag);
     const dynamicTailprops = findDynamicTailpropsInTag(tag, attributeFunctionIdentifier);
-    return [...staticTailprops, ...dynamicTailprops];
+    if (dynamicTailprops.length > 0)
+        throw new Error("Expressions in Tailprops are not supported! Please use a flat string literal instead, or move the expression to the class attribute.");
+    return staticTailprops;
 }
 function findStaticTailpropsInTag(tag) {
     const matches = [...tag.matchAll(/(tw(?:-\w*?)*?)="\${(.*?)\}"/g)];
@@ -115,7 +117,7 @@ function addAttributeToTagUsingFunction(tag, attribute, functionId) {
 }
 function createClassAttributeFromRawTailprops(existingClassContents, tailprops) {
     const tailpropsContents = tailprops
-        .map((t) => `(${applyModifiersToAllInQuotes(t.content, t.modifiers)})`)
+        .map((t) => `${applyModifiersToAllInQuotes(t.content, t.modifiers)}`)
         .join(` + " " + `);
     return `${existingClassContents ? `(${existingClassContents})` + ` + " " + ` : ""}${tailpropsContents}`;
 }

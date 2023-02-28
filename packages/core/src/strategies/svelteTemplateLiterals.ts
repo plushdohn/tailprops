@@ -101,7 +101,12 @@ function findTailpropsInTag(
     attributeFunctionIdentifier
   );
 
-  return [...staticTailprops, ...dynamicTailprops];
+  if (dynamicTailprops.length > 0)
+    throw new Error(
+      "Expressions in Tailprops are not supported! Please use a flat string literal instead, or move the expression to the class attribute."
+    );
+
+  return staticTailprops;
 }
 
 function findStaticTailpropsInTag(tag: string): RawTailprop[] {
@@ -218,7 +223,7 @@ function createClassAttributeFromRawTailprops(
   tailprops: RawTailprop[]
 ) {
   const tailpropsContents = tailprops
-    .map((t) => `(${applyModifiersToAllInQuotes(t.content, t.modifiers)})`)
+    .map((t) => `${applyModifiersToAllInQuotes(t.content, t.modifiers)}`)
     .join(` + " " + `);
 
   return `${

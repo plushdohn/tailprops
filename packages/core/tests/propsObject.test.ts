@@ -43,16 +43,14 @@ describe("props object strategy", () => {
     expect(result.code).toMatch(/class:.*?text-red-500.*?"\s".*?bg-red-500/);
   });
 
-  it("should support conditional tailprops", () => {
+  it("should throw on non-string tailprops", () => {
     const source = `const someObject = {className: someState ? "ok" : "test", tw: anotherState ? "text-red-500" : "text-blue-500"};`;
 
-    const result = transpileJsUsingPropsObject(source, {
-      classAttribute: "className",
-    });
-
-    expect(result.code).toMatch(
-      /className:.*someState \? "ok" \: "test".*"\s".*anotherState \? "text-red-500" : "text-blue-500"/gi
-    );
+    expect(() =>
+      transpileJsUsingPropsObject(source, {
+        classAttribute: "className",
+      })
+    ).toThrow(/expressions/i);
   });
 
   it("should throw on unchainable class", () => {

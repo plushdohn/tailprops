@@ -13,11 +13,9 @@ function transpileJsUsingPropsObject(source, options) {
     }
     (0, traverse_1.default)(ast, {
         ObjectExpression(path) {
-            const tailwindClasses = extractTailpropsClassesFromObjectNode(path, "tw");
-            if (tailwindClasses) {
-                for (const expression of tailwindClasses) {
-                    appendExpressionToObjectProperty(path.node, options.classAttribute, expression);
-                }
+            const tailwindProps = extractTailpropsClassesFromObjectNode(path, "tw");
+            for (const prop of tailwindProps) {
+                appendExpressionToObjectProperty(path.node, options.classAttribute, prop);
             }
         },
     });
@@ -29,43 +27,36 @@ function transpileJsUsingPropsObject(source, options) {
 }
 exports.transpileJsUsingPropsObject = transpileJsUsingPropsObject;
 function extractTailpropsClassesFromObjectNode(path, prefix) {
-    let expressions = [];
+    let props = [];
     for (const [i, p] of path.node.properties.entries()) {
         const property = getObjectPropertyAsTailprop(p, prefix);
         if (property !== null) {
             delete path.node.properties[i];
             const modifiers = (0, utils_1.getTailwindModifiersInAttribute)(property.key);
-            if (property.expression.type === "StringLiteral") {
-                const properties = (0, utils_1.getTailwindPropertiesInString)(property.expression.value);
-                property.expression.value = (0, utils_1.joinPropertiesUsingModifiers)(properties, modifiers);
-                expressions.push(property.expression);
-                continue;
-            }
-            (0, traverse_1.default)(property.expression, {
-                StringLiteral({ node }) {
-                    const properties = (0, utils_1.getTailwindPropertiesInString)(node.value);
-                    node.value = (0, utils_1.joinPropertiesUsingModifiers)(properties, modifiers);
-                },
-            }, path.scope, null, path.parentPath);
-            expressions.push(property.expression);
+            const properties = (0, utils_1.getTailwindPropertiesInString)(property.value);
+            props.push((0, utils_1.joinPropertiesUsingModifiers)(properties, modifiers));
         }
     }
     // Clear up dangling nodes
     path.node.properties = path.node.properties.filter((p) => p !== undefined);
-    return expressions;
+    return props;
 }
 function getObjectPropertyAsTailprop(p, prefix) {
     if (p.type === "ObjectProperty") {
         if (p.key.type === "Identifier" && p.key.name.startsWith(prefix)) {
+            if (p.value.type !== "StringLiteral")
+                throw new Error("Expressions in Tailprops are not supported. Please use flat string literals and move your expression to the class attribute.");
             return {
                 key: p.key.name,
-                expression: p.value,
+                value: p.value.value,
             };
         }
         if (p.key.type === "StringLiteral" && p.key.value.startsWith(prefix)) {
+            if (p.value.type !== "StringLiteral")
+                throw new Error("Expressions in Tailprops are not supported. Please use flat string literals and move your expression to the class attribute.");
             return {
                 key: p.key.value,
-                expression: p.value,
+                value: p.value.value,
             };
         }
     }
@@ -84,16 +75,13 @@ function appendExpressionToObjectProperty(node, key, value) {
         }
     });
     if (!property) {
-        node.properties.push(t.objectProperty(t.identifier(key), value));
+        node.properties.push(t.objectProperty(t.identifier(key), t.stringLiteral(value)));
         return;
     }
     if (!isObjectPropertyConcatenable(property.value)) {
         throw new Error(`Value type for property ${key} can't be concatenated on: ${property.value.type}`);
     }
-    if (!isObjectPropertyConcatenable(value)) {
-        throw new Error(`Passed a value type for key ${key} that can't be used for concatenation: ${property.value.type}`);
-    }
-    property.value = t.binaryExpression("+", property.value, t.binaryExpression("+", t.stringLiteral(" "), value));
+    property.value = t.binaryExpression("+", t.binaryExpression("+", property.value, t.stringLiteral(" ")), t.stringLiteral(value));
 }
 function isObjectPropertyConcatenable(expression) {
     return (expression.type !== "RestElement" &&

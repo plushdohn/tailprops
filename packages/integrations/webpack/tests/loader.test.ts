@@ -57,17 +57,16 @@ describe("webpack loader", () => {
     await loader.bind(context)(input);
 
     expect(webpackCallback.mock.lastCall[1]).toMatch(
-      /{\s*className:\s*"bg-red-500 hover:bg-blue-500"\s*}/
+      /{\s*className:\s*"bg-red-500" \+ " " \+ "hover:bg-blue-500"\s*}/
     );
   });
 
-  it("should handle conditional tailprops", async () => {
+  it("should throw on expressions inside tailprops", async () => {
     const input = `const Button = () => createElement("div", { tw: "bg-red-500", "tw-hover": pinkTheme ? "bg-pink-500" : "bg-blue-500" });`;
 
     await loader.bind(context)(input);
 
-    expect(webpackCallback.mock.lastCall[1]).toMatch(
-      /{\s*className:\s*"bg-red-500" + " " + pinkTheme ? "hover:bg-pink-500" : "hover:bg-blue-500"\s*}/
-    );
+    expect(webpackCallback.mock.lastCall[0]).toBeInstanceOf(Error);
+    expect(webpackCallback.mock.lastCall[0].message).toMatch(/expressions/i);
   });
 });
