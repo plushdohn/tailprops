@@ -5,7 +5,7 @@ describe("Attribute addition function strategy", () => {
     const source = `const test = {
   m: function hydrate() {
     attr_dev(h1, "tw", "bg-red-500");
-    attr_dev(h1, "tw-hover", pinkTheme ? "bg-pink-600" : "bg-blue-400");
+    attr_dev(h1, "tw-hover", "bg-red-400");
   }
 }`;
 
@@ -13,7 +13,7 @@ describe("Attribute addition function strategy", () => {
 
     expect(result.code).toBe(`const test = {
   m: function hydrate() {
-    attr_dev(h1, "class", "bg-red-500" + " " + (pinkTheme ? "hover:bg-pink-600" : "hover:bg-blue-400"));
+    attr_dev(h1, "class", "bg-red-500" + " " + "hover:bg-red-400");
   }
 };`);
   });
@@ -38,9 +38,9 @@ describe("Attribute addition function strategy", () => {
   it("handles complicated expressions with different order", () => {
     const source = `const test = {
   m: function hydrate() {
-    attr_dev(h1, "class", stylesState ? "some-custom-class" : "another-custom-class");
     attr_dev(h1, "tw", "bg-red-500");
-    attr_dev(h1, "tw-hover", pinkTheme ? "bg-pink-500" : "bg-blue-500");
+    attr_dev(h1, "tw-dark-hover-2xl", "bg-red-300");
+    attr_dev(h1, "class", stylesState ? "some-custom-class" : "another-custom-class");
   }
 };`;
 
@@ -48,7 +48,7 @@ describe("Attribute addition function strategy", () => {
 
     expect(result.code).toBe(`const test = {
   m: function hydrate() {
-    attr_dev(h1, "class", (stylesState ? "some-custom-class" : "another-custom-class") + " " + "bg-red-500" + " " + (pinkTheme ? "hover:bg-pink-500" : "hover:bg-blue-500"));
+    attr_dev(h1, "class", (stylesState ? "some-custom-class" : "another-custom-class") + " " + "bg-red-500" + " " + "dark:hover:2xl:bg-red-300");
   }
 };`);
   });
@@ -75,5 +75,17 @@ describe("Attribute addition function strategy", () => {
     const result = transpileUsingAttributeAdditionFunction(source);
 
     expect(result.code).toBe(source);
+  });
+
+  it("throws on expressions", () => {
+    const source = `const test = {
+  m: function hydrate() {
+    attr_dev(h1, "tw-hover", something ? "bg-blue-500" : "bg-red-500");
+  }
+};`;
+
+    expect(() => transpileUsingAttributeAdditionFunction(source)).toThrow(
+      /expressions/i
+    );
   });
 });
