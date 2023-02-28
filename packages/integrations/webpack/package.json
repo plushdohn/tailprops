@@ -1,6 +1,6 @@
 {
   "name": "tailprops-webpack-plugin",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Webpack plugin for Tailprops",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
@@ -21,7 +21,7 @@
     "coverage": "jest --coverage"
   },
   "dependencies": {
-    "tailprops": "workspace:^0.0.1"
+    "tailprops": "workspace:^0.1.0"
   },
   "peerDependencies": {
     "webpack": "^5.75.0"

@@ -1,6 +1,6 @@
 {
   "name": "tailprops-next",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Utility function for quickly including Tailprops in a Next.js project",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
@@ -21,7 +21,7 @@
     "coverage": "jest --coverage"
   },
   "dependencies": {
-    "tailprops-webpack-plugin": "workspace:^0.0.1"
+    "tailprops-webpack-plugin": "workspace:^0.1.0"
   },
   "peerDependencies": {
     "next": "^13.1.6"
