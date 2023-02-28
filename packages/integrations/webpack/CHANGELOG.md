@@ -1,5 +1,13 @@
 # tailprops-webpack-plugin
 
+## 0.2.1
+
+### Patch Changes
+
+- fixed files included in build
+- Updated dependencies
+  - tailprops@0.2.1
+
 ## 0.2.0
 
 ### Minor Changes
