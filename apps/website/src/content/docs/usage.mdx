@@ -8,15 +8,32 @@ sort: 2
 
 There are two main "quirks" you'll need to know when using this library.
 
-### Tailprops only transform code inside double quotes
+### Tailprops only support simple attributes with double quotes
 
-Our transpiler **doesn't transform code inside single quotes or backticks** (for template literals).
+Our transpiler will error if you try to use an expression in a Tailprop:
 
-This was a deliberate decision for three reasons:
+```tsx
+// This will error
+<div tw={open ? "flex" : "hidden"} />
+```
+
+This was supported in the very first release (0.0.1), but was intentionally removed for a couple reasons:
 
 - Implementing new frameworks is easier (since our parsing logic gets simpler)
 - It further discourages [prop forging](#creating-dynamic-properties)
-- Allows you to opt out of our transformation by writing strings in template literals
+- The implementation was flimsy and prone to breaking
+- It was a bit confusing to opt out of the transformation for some strings in the expression (you had to use template literals or single quotes)
+- It did too much magic under the hood that was difficult to foresee by the users of this library.
+
+If you need to use dynamic expressions for your Tailwind classes, use them in your class attribute, and use Tailprops for static styling:
+
+```tsx
+<div
+  className={open ? "flex" : "hidden"}
+  tw="p-8 bg-gray-900 rounded-sm"
+  tw-xl="p-16 flex-col"
+/>
+```
 
 ### Tailprops modifiers use underscores instead of hyphens
 
@@ -67,7 +84,7 @@ const CustomComponent = ({ className }) => (
 
 ## Creating dynamic properties
 
-One thing we can't do is "forge" properties, for example:
+Another thing to keep in mind is that we can't "forge" properties at build-time:
 
 ```tsx
 <div
@@ -75,16 +92,4 @@ One thing we can't do is "forge" properties, for example:
 />
 ```
 
-This limitation [also exists in Tailwind](https://tailwindcss.com/docs/content-configuration#dynamic-class-names). We can't support it because your property now depends on a variable which in turn may depend on your framework's reactivity system, something we can't rely on at compile-time.
-
-For most of these cases, you can just extract the property name and change the condition to this:
-
-```tsx
-<div tw-hover={pinkTheme ? "bg-pink" : "bg-black"} />
-```
-
-Which will compile to a ternary for the class attribute with the correct modifier:
-
-```tsx
-<div class={pinkTheme ? "hover:bg-pink" : "hover:bg-black"} />
-```
+This limitation [also exists in Tailwind](https://tailwindcss.com/docs/content-configuration#dynamic-class-names).
