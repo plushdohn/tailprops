@@ -1,3 +1,3 @@
 export type TailpropsPluginOptions = {
-  framework: "svelte-ssr" | "vue-ssr";
+  framework: "svelte-ssr" | "astro";
 };

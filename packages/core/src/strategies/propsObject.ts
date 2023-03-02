@@ -6,7 +6,7 @@ import {
   getTailwindModifiersInAttribute,
   getTailwindPropertiesInString,
   joinPropertiesUsingModifiers,
-} from "./utils";
+} from "./utils/generic";
 
 export function transpileJsUsingPropsObject(
   source: string,
