@@ -4,7 +4,6 @@ import {
 } from "./utils/generic";
 import {
   createClassAttributeFromRawTailprops,
-  findExistingStaticClassAttributeInTag,
   getHtmlTagsInsideTemplateLiterals,
   RawTailprop,
   removeSliceFromString,
@@ -148,6 +147,18 @@ function findExistingDynamicClassAttributeInTag(
     }"\\)}`
   );
   const match = tag.match(re);
+
+  if (match === null) return null;
+
+  return {
+    start: match.index!,
+    end: match.index! + match[0].length,
+    content: match[1],
+  };
+}
+
+function findExistingStaticClassAttributeInTag(tag: string) {
+  const match = tag.match(/class=("[^"]*?")/);
 
   if (match === null) return null;
 

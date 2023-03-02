@@ -23,18 +23,6 @@ export function removeSlicesInString(
   }, source);
 }
 
-export function findExistingStaticClassAttributeInTag(tag: string) {
-  const match = tag.match(/class="\${(.*?)}"/);
-
-  if (match === null) return null;
-
-  return {
-    start: match.index!,
-    end: match.index! + match[0].length,
-    content: match[1],
-  };
-}
-
 export function createClassAttributeFromRawTailprops(
   existingClassContents: string | null,
   tailprops: RawTailprop[]
@@ -60,7 +48,7 @@ export function removeSliceFromString(
 export function getHtmlTagsInsideTemplateLiterals(
   source: string
 ): StringSlice[] {
-  const templates = [...source.matchAll(/(?<=`[\S\s]*)<.*?tw.*?>/g)];
+  const templates = [...source.matchAll(/(?<=`[\S\s]*)<[^>]*?tw.*?>/g)];
 
   return templates.map((t) => ({
     start: t.index!,
