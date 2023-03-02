@@ -32,4 +32,13 @@ declare module "preact" {
 }`,
     extensions: ["svelte"],
   },
+  astro: {
+    typesCode: `declare namespace astroHTML.JSX {
+  export interface AstroBuiltinAttributes {
+    tw?: string;
+    [key: \`tw-\${string}\`]: string;
+  }
+}`,
+    extensions: ["astro"],
+  },
 } as Record<string, { typesCode: string; extensions: string[] }>;
