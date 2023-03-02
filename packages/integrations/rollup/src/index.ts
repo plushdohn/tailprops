@@ -7,10 +7,14 @@ import {
 import { TailpropsPluginOptions } from "./types";
 
 export function tailpropsPlugin(options: TailpropsPluginOptions) {
+  const frameworks = Array.isArray(options.framework)
+    ? options.framework
+    : [options.framework];
+
   const transform: TransformHook = function (code, id) {
     const context = this.meta;
 
-    if (options.framework === "svelte-ssr") {
+    if (frameworks.includes("svelte-ssr")) {
       if (id.endsWith(".svelte")) {
         code = transpileUsingSvelteTemplateLiterals(code);
 
@@ -21,16 +25,12 @@ export function tailpropsPlugin(options: TailpropsPluginOptions) {
       }
 
       return null;
-    } else if (options.framework === "astro") {
+    } else if (frameworks.includes("astro")) {
       if (id.endsWith(".astro")) {
-        const out = transpileUsingAstroTemplateLiterals(code, {
+        return transpileUsingAstroTemplateLiterals(code, {
           attributeFunctionId: "$$addAttribute",
           classAttributeKeyword: "class",
         });
-
-        //console.log(out);
-
-        return out;
       }
 
       return null;

@@ -1,3 +1,5 @@
+type Frameworks = "svelte-ssr" | "astro";
+
 export type TailpropsPluginOptions = {
-  framework: "svelte-ssr" | "astro";
+  framework: Frameworks | Frameworks[];
 };
