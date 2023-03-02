@@ -1,5 +1,11 @@
 # tailprops
 
+## 0.2.2
+
+### Patch Changes
+
+- Added Astro integration
+
 ## 0.2.1
 
 ### Patch Changes
