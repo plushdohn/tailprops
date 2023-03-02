@@ -19,8 +19,8 @@ importers:
     specifiers:
       '@astrojs/tailwind': ^3.0.1
       astro: ^2.0.16
-      rollup-plugin-tailprops: workspace:^0.2.1
-      tailprops: workspace:^0.2.1
+      rollup-plugin-tailprops: workspace:^0.2.2
+      tailprops: workspace:^0.2.2
       tailwindcss: ^3.0.24
     dependencies:
       '@astrojs/tailwind': 3.0.1_f3zpeibjjbk2qgpnv4i7x4cubq
@@ -35,10 +35,10 @@ importers:
       '@sveltejs/kit': ^1.5.0
       autoprefixer: ^10.4.13
       postcss: ^8.4.21
-      rollup-plugin-tailprops: workspace:^0.2.1
+      rollup-plugin-tailprops: workspace:^0.2.2
       svelte: ^3.54.0
       svelte-check: ^3.0.1
-      tailprops: workspace:^0.2.1
+      tailprops: workspace:^0.2.2
       tailwindcss: ^3.2.6
       tslib: ^2.4.1
       typescript: ^4.9.3
@@ -52,7 +52,7 @@ importers:
       svelte: 3.55.1
       svelte-check: 3.0.3_pehl75e5jsy22vp33udjja4soi
       tailprops: link:../../../packages/core
-      tailwindcss: 3.2.6_postcss@8.4.21
+      tailwindcss: 3.2.6
       tslib: 2.5.0
       typescript: 4.9.5
       vite: 4.1.1
@@ -82,7 +82,7 @@ importers:
       react-highlight: ^0.15.0
       react-markdown: ^8.0.5
       react-syntax-highlighter: ^15.5.0
-      tailprops: ^0.2.1
+      tailprops: ^0.2.2
       tailprops-next: ^0.2.1
       tailwindcss: ^3.2.6
       typescript: ^4.9.4
@@ -114,7 +114,7 @@ importers:
       react-syntax-highlighter: 15.5.0_react@18.2.0
       tailprops: link:../../packages/core
       tailprops-next: link:../../packages/integrations/next
-      tailwindcss: 3.2.6_postcss@8.4.21
+      tailwindcss: 3.2.6
       typescript: 4.9.5
       webpack: 5.75.0
       zustand: 4.3.4_react@18.2.0
@@ -177,7 +177,7 @@ importers:
       '@types/node': ^18.13.0
       jest: ^29.4.2
       rollup: ^3.15.0
-      tailprops: workspace:^0.2.1
+      tailprops: workspace:^0.2.2
       ts-jest: ^29.0.5
       typescript: ^4.9.5
     dependencies:
@@ -1634,7 +1634,7 @@ packages:
       lodash.isplainobject: 4.0.6
       lodash.merge: 4.6.2
       postcss-selector-parser: 6.0.10
-      tailwindcss: 3.2.6_postcss@8.4.21
+      tailwindcss: 3.2.6
     dev: false
 
   /@types/acorn/4.0.6:
@@ -7217,39 +7217,6 @@ packages:
     resolution: {integrity: sha512-BfgQWZrtqowOQMC2bwaSNe7xcIjdDEgixWGYOd6AL0CbKHJlvhfdbINeAW76l1sO+1ov/MJ93ODJ9yluRituIw==}
     engines: {node: '>=12.13.0'}
     hasBin: true
-    dependencies:
-      arg: 5.0.2
-      chokidar: 3.5.3
-      color-name: 1.1.4
-      detective: 5.2.1
-      didyoumean: 1.2.2
-      dlv: 1.1.3
-      fast-glob: 3.2.12
-      glob-parent: 6.0.2
-      is-glob: 4.0.3
-      lilconfig: 2.0.6
-      micromatch: 4.0.5
-      normalize-path: 3.0.0
-      object-hash: 3.0.0
-      picocolors: 1.0.0
-      postcss: 8.4.21
-      postcss-import: 14.1.0_postcss@8.4.21
-      postcss-js: 4.0.1_postcss@8.4.21
-      postcss-load-config: 3.1.4_postcss@8.4.21
-      postcss-nested: 6.0.0_postcss@8.4.21
-      postcss-selector-parser: 6.0.11
-      postcss-value-parser: 4.2.0
-      quick-lru: 5.1.1
-      resolve: 1.22.1
-    transitivePeerDependencies:
-      - ts-node
-
-  /tailwindcss/3.2.6_postcss@8.4.21:
-    resolution: {integrity: sha512-BfgQWZrtqowOQMC2bwaSNe7xcIjdDEgixWGYOd6AL0CbKHJlvhfdbINeAW76l1sO+1ov/MJ93ODJ9yluRituIw==}
-    engines: {node: '>=12.13.0'}
-    hasBin: true
-    peerDependencies:
-      postcss: ^8.0.9
     dependencies:
       arg: 5.0.2
       chokidar: 3.5.3
