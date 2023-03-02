@@ -36,7 +36,7 @@ import {
   getTailwindModifiersInAttribute,
   getTailwindPropertiesInString,
   joinPropertiesUsingModifiers,
-} from "./utils";
+} from "./utils/generic";
 
 type TailpropNodesMap = {
   [key: string]: string[];

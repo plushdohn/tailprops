@@ -3,7 +3,7 @@ import {
   getTailwindModifiersInAttribute,
   getTailwindPropertiesInString,
   joinPropertiesUsingModifiers,
-} from "./strategies/utils";
+} from "./strategies/utils/generic";
 
 type Extension = "svelte" | "tsx" | "jsx";
 

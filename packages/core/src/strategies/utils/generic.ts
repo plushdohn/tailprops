@@ -27,3 +27,7 @@ export function joinPropertiesUsingModifiers(
     .map((p) => `${[...modifiers, ""].join(":")}${p}`)
     .join(" ")}`;
 }
+
+export function escapeDollarsInString(source: string) {
+  return source.replace(/\$/g, "\\$");
+}

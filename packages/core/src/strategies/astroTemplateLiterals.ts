@@ -1,28 +1,7 @@
-/**
- * Ok so this file exists for handling the template literals
- * syntax Svelte uses for component attributes in SSR.
- *
- * The rendered output from the Svelte SSR compiler looks something like this:
- * create_ssr_component(`<div class="${"my-class"}"></div>`)
- *
- * Except when the attribute uses an expression, in which case
- * the template becomes this:
- * create_ssr_component(`<div${add_attribute("class", <expression>, 0)} other-attr="${"example"}"></div$>`)
- *
- * So for each one of these tags, we want to find all "static" tailprops,
- * remove them and store their contents and modifiers.
- *
- * Then we do something similar for the "dynamic" tailprops.
- *
- * Then we look for a dynamic class attribute, if it doesn't exist
- * we look for a static one.
- *
- * Finally we create a new dynamic class attribute which concatenates
- * the current class contents (if any were found) and all the tailprops
- * with the modifiers applied.
- */
-
-import { getTailwindModifiersInAttribute } from "./utils/generic";
+import {
+  escapeDollarsInString,
+  getTailwindModifiersInAttribute,
+} from "./utils/generic";
 import {
   createClassAttributeFromRawTailprops,
   getHtmlTagsInsideTemplateLiterals,
@@ -31,14 +10,14 @@ import {
   removeSlicesInString,
 } from "./utils/templates";
 
-export function transpileUsingSvelteTemplateLiterals(
+export function transpileUsingAstroTemplateLiterals(
   source: string,
   options: {
     classAttributeKeyword: string;
     attributeFunctionId: string;
   } = {
     classAttributeKeyword: "class",
-    attributeFunctionId: "add_attribute",
+    attributeFunctionId: "$$addAttribute",
   }
 ): string {
   const htmlTags = getHtmlTagsInsideTemplateLiterals(source);
@@ -103,7 +82,7 @@ function findTailpropsInTag(
 }
 
 function findStaticTailpropsInTag(tag: string): RawTailprop[] {
-  const matches = [...tag.matchAll(/(tw(?:-\w*?)*?)="\${(.*?)\}"/g)];
+  const matches = [...tag.matchAll(/(tw(?:-\w*?)*?)=(".*?")/g)];
 
   return matches.map((m) => ({
     start: m.index!,
@@ -118,7 +97,9 @@ function findDynamicTailpropsInTag(
   attributeFunctionId: string
 ): RawTailprop[] {
   const re = new RegExp(
-    `\\\${${attributeFunctionId}\\("(tw(?:-\\w*?)*?)",\\s?(.*?),.*?\\)}`,
+    `\\\${${escapeDollarsInString(
+      attributeFunctionId
+    )}\\(([^,]*?),\\s?"(tw(?:-\\w*?)*?)"\\)}`,
     "g"
   );
 
@@ -160,11 +141,12 @@ function findExistingDynamicClassAttributeInTag(
     classAttributeKeyword: string;
   }
 ) {
-  const match = tag.match(
-    new RegExp(
-      `\\\${${options.attributeFunctionId}\\("${options.classAttributeKeyword}",(.*?),.*?\\)}`
-    )
+  const re = new RegExp(
+    `\\\${${escapeDollarsInString(options.attributeFunctionId)}\\((.*?),\\s?"${
+      options.classAttributeKeyword
+    }"\\)}`
   );
+  const match = tag.match(re);
 
   if (match === null) return null;
 
@@ -176,7 +158,7 @@ function findExistingDynamicClassAttributeInTag(
 }
 
 function findExistingStaticClassAttributeInTag(tag: string) {
-  const match = tag.match(/class="\${(.*?)}"/);
+  const match = tag.match(/class=("[^"]*?")/);
 
   if (match === null) return null;
 
@@ -196,7 +178,7 @@ function addAttributeToTagUsingFunction(
 
   tag =
     tag.slice(0, index) +
-    `\${${functionId}("${attribute.name}",${attribute.value}, 0)}` + // i have no idea what "0" does here tbh
+    `\${${functionId}(${attribute.value},"${attribute.name}")}` +
     tag.slice(index);
 
   return tag;
