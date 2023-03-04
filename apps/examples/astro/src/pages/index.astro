@@ -1,4 +1,6 @@
 ---
+import TestComponent from "../components/TestComponent.astro";
+
 const count = "test-class";
 ---
 
@@ -11,6 +13,6 @@ const count = "test-class";
     <title>Astro</title>
   </head>
   <body>
-    <h1 class={count} tw="bg-red-500" tw-hover="bg-blue-500">wow astro</h1>
+    <TestComponent />
   </body>
 </html>
