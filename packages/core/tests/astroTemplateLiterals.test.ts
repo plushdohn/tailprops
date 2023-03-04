@@ -7,7 +7,7 @@ describe("template literals strategy", () => {
 
     const result = transpileUsingAstroTemplateLiterals(source);
 
-    expect(result).toMatch(/"bg-red-500" \+ " " \+ "hover:bg-red-400"/gi);
+    expect(result).toMatch(/"bg-red-500 hover:bg-red-400"/gi);
   });
 
   it("concatenates to existing classes", () => {
@@ -16,7 +16,7 @@ describe("template literals strategy", () => {
 
     const result = transpileUsingAstroTemplateLiterals(source);
 
-    expect(result).toMatch(/\("test-class"\) \+ " " \+ "hover:bg-red-400"/gi);
+    expect(result).toMatch(/"test-class hover:bg-red-400"/gi);
   });
 
   it("handles complicated class expressions with different order", () => {

@@ -46,21 +46,31 @@ function transformHtmlTag(
   const existingClassAttribute = findExistingClassAttributeInTag(tag, options);
 
   if (existingClassAttribute)
-    tag = removeSliceFromString(tag, existingClassAttribute);
+    tag = removeSliceFromString(tag, existingClassAttribute.slice);
 
-  tag = addAttributeToTagUsingFunction(
-    tag,
-    {
-      name: options.classAttributeKeyword,
-      value: createClassAttributeFromRawTailprops(
-        existingClassAttribute ? existingClassAttribute.content : null,
+  if (existingClassAttribute && existingClassAttribute.dynamic) {
+    return addAttributeToTagUsingFunction(
+      tag,
+      {
+        name: options.classAttributeKeyword,
+        value: createClassAttributeFromRawTailprops(
+          existingClassAttribute.slice.content,
+          tailprops
+        ),
+      },
+      options.attributeFunctionId
+    );
+  }
+
+  return addStaticAttributeToTag(tag, {
+    name: options.classAttributeKeyword,
+    value: eval(
+      createClassAttributeFromRawTailprops(
+        existingClassAttribute ? existingClassAttribute.slice.content : null,
         tailprops
-      ),
-    },
-    options.attributeFunctionId
-  );
-
-  return tag;
+      )
+    ),
+  });
 }
 
 function findTailpropsInTag(
@@ -125,11 +135,19 @@ function findExistingClassAttributeInTag(
     options
   );
 
-  if (dynamicClassAttribute) return dynamicClassAttribute;
+  if (dynamicClassAttribute)
+    return {
+      dynamic: true,
+      slice: dynamicClassAttribute,
+    };
 
   const staticClassAttribute = findExistingStaticClassAttributeInTag(tag);
 
-  if (staticClassAttribute) return staticClassAttribute;
+  if (staticClassAttribute)
+    return {
+      dynamic: false,
+      slice: staticClassAttribute,
+    };
 
   return null;
 }
@@ -167,6 +185,20 @@ function findExistingStaticClassAttributeInTag(tag: string) {
     end: match.index! + match[0].length,
     content: match[1],
   };
+}
+
+function addStaticAttributeToTag(
+  tag: string,
+  attribute: { name: string; value: string }
+) {
+  const index = tag.indexOf(">");
+
+  tag =
+    tag.slice(0, index) +
+    ` ${attribute.name}="${attribute.value}"` +
+    tag.slice(index);
+
+  return tag;
 }
 
 function addAttributeToTagUsingFunction(
