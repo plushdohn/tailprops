@@ -11,7 +11,7 @@
     "dev": "turbo run dev",
     "test": "turbo run test",
     "coverage": "turbo run coverage",
-    "publish-packages": "turbo run build test && changeset version && changeset publish"
+    "publish-packages": "turbo run build && changeset version && changeset publish"
   },
   "devDependencies": {
     "turbo": "latest"
