@@ -37,6 +37,7 @@
     "@types/babel-generator": "^6.25.5",
     "@types/babel__generator": "^7.6.4",
     "@types/babel__traverse": "^7.18.3",
+    "@types/parse-glob": "^3.0.29",
     "tailwindcss": "^3.2.6"
   }
 }

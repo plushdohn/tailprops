@@ -1,27 +1,5 @@
-/**
- * Ok so this file exists for handling the template literals
- * syntax Svelte uses for component attributes in SSR.
- *
- * The rendered output from the Svelte SSR compiler looks something like this:
- * create_ssr_component(`<div class="${"my-class"}"></div>`)
- *
- * Except when the attribute uses an expression, in which case
- * the template becomes this:
- * create_ssr_component(`<div${add_attribute("class", <expression>, 0)} other-attr="${"example"}"></div$>`)
- *
- * So for each one of these tags, we want to find all "static" tailprops,
- * remove them and store their contents and modifiers.
- *
- * Then we do something similar for the "dynamic" tailprops.
- *
- * Then we look for a dynamic class attribute, if it doesn't exist
- * we look for a static one.
- *
- * Finally we create a new dynamic class attribute which concatenates
- * the current class contents (if any were found) and all the tailprops
- * with the modifiers applied.
- */
-
+import * as parser from "@babel/parser";
+import generate from "@babel/generator";
 import { getTailwindModifiersInAttribute } from "./utils/generic";
 import {
   createClassAttributeFromRawTailprops,
@@ -36,11 +14,12 @@ export function transpileUsingSvelteTemplateLiterals(
   options: {
     classAttributeKeyword: string;
     attributeFunctionId: string;
+    generateSourceMaps?: boolean;
   } = {
     classAttributeKeyword: "class",
     attributeFunctionId: "add_attribute",
   }
-): string {
+) {
   const htmlTags = getHtmlTagsInsideTemplateLiterals(source);
 
   for (const tag of htmlTags.reverse()) {
@@ -50,7 +29,15 @@ export function transpileUsingSvelteTemplateLiterals(
       source.slice(tag.end);
   }
 
-  return source;
+  const ast = parser.parse(source, { sourceType: "unambiguous" });
+
+  const newSource = generate(ast, { sourceMaps: options.generateSourceMaps });
+
+  return {
+    code: newSource.code,
+    map: newSource.map,
+    ast,
+  };
 }
 
 function transformHtmlTag(

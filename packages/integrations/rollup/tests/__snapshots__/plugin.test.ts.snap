@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`rollup plugin astro integration should apply template literals transform on Astro files 1`] = `
+"function Test() {
+  return \`<html><span  \${$$addAttribute("test-class" + " " + "bg-red-500" + " " + "hover:bg-red-400", "class")}>ciao</span></html>\`;
+}"
+`;
+
+exports[`rollup plugin astro integration should support preact integration 1`] = `
+"function SomeComponent() {
+  return h("div", {
+    className: "test-class" + " " + "bg-red-500" + " " + "hover:bg-red-400"
+  }, "ciao");
+}"
+`;
+
+exports[`rollup plugin astro integration should support react integration 1`] = `
+"function SomeComponent() {
+  return React.createElement("div", {
+    className: "test-class" + " " + "bg-red-500" + " " + "hover:bg-red-400"
+  }, "ciao");
+}"
+`;
+
+exports[`rollup plugin preact integration should account for passed class attribute 1`] = `
+"function SomeComponent() {
+  return h("div", {
+    hoppity: "test-class" + " " + "bg-red-500" + " " + "hover:bg-red-400"
+  }, "ciao");
+}"
+`;
+
+exports[`rollup plugin preact integration should apply props object strategy on preact files 1`] = `
+"function SomeComponent() {
+  return h("div", {
+    className: "test-class" + " " + "bg-red-500" + " " + "hover:bg-red-400"
+  }, "ciao");
+}"
+`;
+
+exports[`rollup plugin react integration should apply props object strategy on react files 1`] = `
+"function SomeComponent() {
+  return React.createElement("div", {
+    className: "test-class" + " " + "bg-red-500" + " " + "hover:bg-red-400"
+  }, "ciao");
+}"
+`;
+
+exports[`rollup plugin svelte integration should apply template literals transform on SSR files 1`] = `"create_ssr_component(\`<p   \${add_attribute("class", "some-class" + " " + "bg-red-500" + " " + "2xl:bg-red-300", 0)}>test</p>\`);"`;

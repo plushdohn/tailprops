@@ -74,6 +74,7 @@ export function transpileUsingAttributeAdditionFunction(
   return {
     code: newSource.code,
     map: newSource.map,
+    ast,
   };
 }
 

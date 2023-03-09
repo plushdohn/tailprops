@@ -41,6 +41,7 @@ export function transpileJsUsingPropsObject(
   return {
     code: newSource.code,
     map: newSource.map,
+    ast,
   };
 }
 

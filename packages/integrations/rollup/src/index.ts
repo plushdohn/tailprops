@@ -1,44 +1,42 @@
-import type { TransformHook } from "rollup";
-import {
-  transpileUsingAstroTemplateLiterals,
-  transpileUsingAttributeAdditionFunction,
-  transpileUsingSvelteTemplateLiterals,
-} from "tailprops";
+import type { SourceDescription, TransformHook } from "rollup";
+import { handleAstro } from "./handlers/astro";
+import { handlePreact } from "./handlers/preact";
+import { handleReact } from "./handlers/react";
+import { handleSvelteSsr } from "./handlers/svelteSsr";
 import { TailpropsPluginOptions } from "./types";
 
 export function tailpropsPlugin(options: TailpropsPluginOptions) {
-  const frameworks = Array.isArray(options.framework)
-    ? options.framework
-    : [options.framework];
-
   const transform: TransformHook = function (code, id) {
     const context = this.meta;
 
-    if (frameworks.includes("svelte-ssr")) {
-      if (id.endsWith(".svelte")) {
-        code = transpileUsingSvelteTemplateLiterals(code);
+    let out: Partial<SourceDescription> | null | undefined;
 
-        return transpileUsingAttributeAdditionFunction(code, {
-          attributeFunctionId: context.watchMode ? "attr_dev" : "attr",
-          classAttributeKeyword: "class",
-        }).code;
-      }
-
-      return null;
-    } else if (frameworks.includes("astro")) {
-      if (id.endsWith(".astro")) {
-        return transpileUsingAstroTemplateLiterals(code, {
-          attributeFunctionId: "$$addAttribute",
-          classAttributeKeyword: "class",
-        });
-      }
-
-      return null;
+    if (options.framework === "svelte-ssr") {
+      out = handleSvelteSsr({ code, id }, { ssr: context.watchMode });
+    } else if (options.framework === "astro") {
+      out = handleAstro({ code, id }, { integrations: options.integrations });
+    } else if (options.framework === "react") {
+      out = handleReact({ code, id });
+    } else if (options.framework === "preact") {
+      out = handlePreact(
+        { code, id },
+        { classAttribute: options.classAttribute }
+      );
     }
 
-    throw new Error(
-      `Framework '${options.framework}' is not supported by the Tailprops Rollup plugin. If you think it's horribly bad that we don't support this framework, please open an issue on GitHub.`
-    );
+    if (out === undefined) {
+      throw new Error(
+        `Framework not supported by the Tailprops Rollup plugin. If you think it's horribly bad that we don't support this framework, please open an issue on GitHub.`
+      );
+    }
+
+    if (out === null) return null;
+
+    return {
+      ...out,
+      map: this.getCombinedSourcemap() ? out.map : null,
+      ast: undefined, // Can't reuse babel ASTs
+    };
   };
 
   return {

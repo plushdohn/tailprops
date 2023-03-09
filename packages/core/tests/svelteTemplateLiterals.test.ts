@@ -7,16 +7,16 @@ describe("template literals strategy", () => {
 
     const result = transpileUsingSvelteTemplateLiterals(source);
 
-    expect(result).toMatch(/"bg-red-500" \+ " " \+ "hover:bg-red-400"/gi);
+    expect(result.code).toMatchSnapshot();
   });
 
   it("concatenates to existing classes", () => {
     const source =
-      'create_ssr_component(`<div class="${"bg-red-500"}" tw-hover="${"bg-red-400"}">ok</div>`);';
+      'create_ssr_component(`<div class="${"test-class"}" tw-hover="${"bg-red-400"}">ok</div>`);';
 
     const result = transpileUsingSvelteTemplateLiterals(source);
 
-    expect(result).toMatch(/\("bg-red-500"\) \+ " " \+ "hover:bg-red-400"/gi);
+    expect(result.code).toMatchSnapshot();
   });
 
   it("handles complicated class expressions with different order", () => {
@@ -25,9 +25,7 @@ describe("template literals strategy", () => {
 
     const result = transpileUsingSvelteTemplateLiterals(source);
 
-    expect(result).toMatch(
-      /add_attribute\("class",\s?\( stylesState \? "some-custom-class" : "another-custom-class"\) \+ " " \+ "bg-red-500" \+ " " \+ "hover:dark:bg-blue-500"/
-    );
+    expect(result.code).toMatchSnapshot();
   });
 
   it("should throw on expressions", () => {
