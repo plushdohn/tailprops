@@ -1,6 +1,6 @@
 {
   "name": "rollup-plugin-tailprops",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Rollup plugin for Tailprops",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
@@ -21,7 +21,7 @@
     "coverage": "jest --coverage"
   },
   "dependencies": {
-    "tailprops": "workspace:^0.2.2"
+    "tailprops": "workspace:^0.3.0"
   },
   "peerDependencies": {
     "rollup": "^3.15.0"

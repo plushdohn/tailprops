@@ -28,7 +28,7 @@ jobs:
           cache: "pnpm"
 
       - name: Install dependencies with pnpm
-        run: pnpm install
+        run: pnpm install --no-frozen-lockfile
 
       - name: Create Release PR or Publish to npm
         id: changesets

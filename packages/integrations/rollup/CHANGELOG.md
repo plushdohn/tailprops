@@ -1,5 +1,18 @@
 # rollup-plugin-tailprops
 
+## 0.3.0
+
+### Minor Changes
+
+- 73528a4: Added React integration to Rollup
+  Rewritten tailprops CLI
+  Added Astro islands support
+
+### Patch Changes
+
+- Updated dependencies [73528a4]
+  - tailprops@0.3.0
+
 ## 0.2.2
 
 ### Patch Changes
