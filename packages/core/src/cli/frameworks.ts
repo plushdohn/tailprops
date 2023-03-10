@@ -1,44 +1,30 @@
-export default {
-  react: {
-    typesCode: `import "react";
+const typeFunctions: Record<string, (types: string) => string> = {
+  react: (types) => `import "react";
 
 declare module "react" {
   export interface Attributes {
-    tw?: string;
-    [key: \`tw-\${string}\`]: string;
+    ${types}
   }
 }`,
-    extensions: ["tsx", "jsx"],
-  },
-  preact: {
-    typesCode: `import "preact";
+  preact: (types) => `import "preact";
 
 declare module "preact" {
   namespace JSX {
     interface HTMLAttributes {
-      tw?: string;
-      [key: \`tw-\${string}\`]: string;
+      ${types}
     }
   }
 }`,
-    extensions: ["tsx", "jsx"],
-  },
-  svelte: {
-    typesCode: `declare namespace svelteHTML {
+  svelte: (types) => `declare namespace svelteHTML {
   interface HTMLAttributes<T> {
-    tw?: string;
-    [key: \`tw-\${string}\`]: string;
+    ${types}
   }
 }`,
-    extensions: ["svelte"],
-  },
-  astro: {
-    typesCode: `declare namespace astroHTML.JSX {
+  astro: (types) => `declare namespace astroHTML.JSX {
   export interface AstroBuiltinAttributes {
-    tw?: string;
-    [key: \`tw-\${string}\`]: string;
+    ${types}
   }
 }`,
-    extensions: ["astro"],
-  },
-} as Record<string, { typesCode: string; extensions: string[] }>;
+};
+
+export default typeFunctions;

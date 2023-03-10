@@ -10,7 +10,8 @@
     "outDir": "dist",
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
-    "strict": true
+    "strict": true,
+    "esModuleInterop": true
   },
   "exclude": ["node_modules", "dist"]
 }

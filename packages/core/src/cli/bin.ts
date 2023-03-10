@@ -1,74 +1,27 @@
 #! /usr/bin/env node
 
-import { createGracefulError } from "./error";
-import frameworks from "./frameworks";
-import { readJsonSync, writeFileSync } from "./utils";
-import { applyTransformToConfig } from "./config";
+import { program } from "commander";
+import { initCommand } from "./init";
+import { typegenCommand } from "./typegen";
 
-const command = process.argv[2];
-
-if (!command || command !== "init") {
-  createGracefulError(`Unknown command '${command}}'`);
-}
-
-const framework = process.argv[3];
-
-if (!framework) {
-  createGracefulError(
-    `No framework specified. Please specify a framework to generate types for.\n\nExample: npx tailprops init react`
+program
+  .name("tailprops")
+  .description(
+    "A command-line tool for automating setup steps in Tailprops projects"
   );
-}
 
-if (!frameworks[framework]) {
-  createGracefulError(
-    `Unsupported framework '${framework}'. Supported frameworks: ${Object.keys(
-      frameworks
-    ).join(", ")}`
-  );
-}
+program
+  .command("init [framework]")
+  .description(
+    "Adds the Tailprops content transform to your Tailwind config and optionally generates TS types."
+  )
+  .action(initCommand);
 
-console.log("Applying transform to Tailwind config...");
+program
+  .command("typegen <framework>")
+  .description(
+    "Generates types for a framework using the theme from your Tailwind config."
+  )
+  .action(typegenCommand);
 
-applyTransformToConfig(frameworks[framework].extensions);
-
-console.log(`Creating types for '${framework}'...`);
-
-let types = frameworks[framework].typesCode;
-
-try {
-  writeFileSync("tailprops.d.ts", types);
-} catch {
-  createGracefulError(
-    `Couldn't write types file. Make sure tailprops.d.ts isn't open somewhere and that you have write permissions on this folder.`
-  );
-}
-
-let tsconfig: any;
-
-try {
-  tsconfig = readJsonSync("tsconfig.json");
-} catch {
-  createGracefulError(
-    `Couldn't read tsconfig.json. If you aren't using TS you can ignore this error.`
-  );
-}
-
-if (tsconfig) {
-  console.log("Adding types to tsconfig.json...");
-
-  if (!tsconfig.include) {
-    tsconfig.include = [];
-  }
-
-  tsconfig.include.push("tailprops.d.ts");
-
-  try {
-    writeFileSync("tsconfig.json", JSON.stringify(tsconfig, null, 2));
-  } catch {
-    createGracefulError(
-      `Couldn't write to tsconfig.json. Make sure it isn't open somewhere and that you have write permissions on this folder.`
-    );
-  }
-}
-
-console.log("Done!");
+program.parseAsync();
