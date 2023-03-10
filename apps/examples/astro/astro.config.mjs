@@ -10,11 +10,7 @@ export default defineConfig({
     plugins: [
       tailpropsPlugin({
         framework: "astro",
-        integrations: [
-          {
-            name: "react",
-          },
-        ],
+        integrations: ["react"],
       }),
     ],
   },

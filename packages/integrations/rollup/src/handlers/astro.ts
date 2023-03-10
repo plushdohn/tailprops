@@ -2,14 +2,17 @@ import { transpileUsingAstroTemplateLiterals } from "tailprops";
 import { handlePreact } from "./preact";
 import { handleReact } from "./react";
 
-type AstroReactIntegration = {
-  name: "react";
-};
+type GenericIntegration<T extends string, R extends any> =
+  | T
+  | ({
+      name: T;
+    } & R);
 
-type AstroPreactIntegration = {
-  name: "preact";
-  classAttribute?: string;
-};
+type AstroReactIntegration = GenericIntegration<"react", {}>;
+type AstroPreactIntegration = GenericIntegration<
+  "preact",
+  { classAttribute?: string }
+>;
 
 export type AstroIntegration = AstroReactIntegration | AstroPreactIntegration;
 
@@ -24,11 +27,18 @@ export function handleAstro(
     });
   }
 
-  for (const integration of integrations) {
+  for (const integration of integrations.map((i) =>
+    typeof i === "string" ? { name: i } : i
+  )) {
     if (integration.name === "preact") {
       return handlePreact(
         { code, id },
-        { classAttribute: integration.classAttribute }
+        {
+          classAttribute:
+            "classAttribute" in integration
+              ? integration.classAttribute
+              : undefined,
+        }
       );
     } else if (integration.name === "react") {
       return handleReact({ code, id });

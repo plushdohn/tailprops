@@ -144,7 +144,7 @@ function getTypeStringFromResolvedTheme(theme: any) {
     "group-disabled",
   ];
 
-  const types: string[] = ["tw?: string;"];
+  const types: string[] = ["tw?: string;", "[`tw-${string}`]?: string;"];
 
   const entries = {
     ...theme.screens,
