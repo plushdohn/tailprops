@@ -12,35 +12,33 @@ describe("props object strategy", () => {
   });
 
   it("should account for passed class keyword", () => {
-    const source = `const someObject = {foo: "text-red-500", tw: "bg-red-500"};`;
+    const source = `const someObject = {foo: "test-class", tw: "bg-red-500"};`;
 
     const result = transpileJsUsingPropsObject(source, {
       classAttribute: "foo",
     });
 
-    expect(result.code).toMatch(/foo:.*?text-red-500.*?bg-red-500/gi);
+    expect(result.code).toContain(`foo: "test-class" + " " + "bg-red-500"`);
   });
 
   it("should support class keyword as string literal (don't know why you'd do this but whatever)", () => {
-    const source = `const someObject = {"class": "text-red-500", tw: "bg-red-500"};`;
+    const source = `const someObject = {"class": "test-class", tw: "bg-red-500"};`;
 
     const result = transpileJsUsingPropsObject(source, {
       classAttribute: "class",
     });
 
-    expect(result.code).toMatch(
-      /"class".*?"text-red-500".*?\s.*?"bg-red-500"/g
-    );
+    expect(result.code).toContain(`"class": "test-class" + " " + "bg-red-500"`);
   });
 
   it("should seamlessly append classes where possible", () => {
-    const source = `const someObject = {class: "text-red-500", tw: "bg-red-500"};`;
+    const source = `const someObject = {class: "test-class", tw: "bg-red-500"};`;
 
     const result = transpileJsUsingPropsObject(source, {
       classAttribute: "class",
     });
 
-    expect(result.code).toMatch(/class:.*?text-red-500.*?"\s".*?bg-red-500/);
+    expect(result.code).toContain(`class: "test-class" + " " + "bg-red-500"`);
   });
 
   it("should throw on non-string tailprops", () => {

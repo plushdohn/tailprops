@@ -1,5 +1,18 @@
-type Frameworks = "svelte-ssr" | "astro";
+import { AstroIntegration } from "./handlers/astro";
 
-export type TailpropsPluginOptions = {
-  framework: Frameworks | Frameworks[];
+type FrameworkOptions =
+  | {
+      framework: "svelte-ssr" | "react";
+    }
+  | {
+      framework: "astro";
+      integrations?: AstroIntegration[];
+    }
+  | {
+      framework: "preact";
+      classAttribute?: string;
+    };
+
+export type TailpropsPluginOptions = FrameworkOptions & {
+  debug?: boolean;
 };

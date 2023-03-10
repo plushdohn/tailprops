@@ -1,4 +1,4 @@
-import { tailpropsTailwindTransform } from "../src";
+import { tailpropsTailwindTransform, withTailprops } from "../src";
 
 describe("custom tailwind transform", () => {
   it("should transform tw-<modifier> attributes to just tw", () => {
@@ -71,5 +71,35 @@ describe("custom tailwind transform", () => {
     expect(result).toEqual(`
       <div tw="2xl:p-0.5 2xl:bg-[#FF8A08] 2xl:text-[2rem]" />
     `);
+  });
+
+  describe("utility wrapper", () => {
+    it("should wrap the tailwind config and change the content correctly", () => {
+      const config = {
+        content: ["./src/**/*.svelte"],
+        theme: {
+          someTheme: "ok",
+        },
+      };
+
+      const result = withTailprops(config);
+
+      expect(result).toHaveProperty("theme.someTheme", "ok");
+      expect(result).toHaveProperty("content.files", ["./src/**/*.svelte"]);
+      expect(result).toHaveProperty(
+        "content.transform.svelte",
+        tailpropsTailwindTransform
+      );
+    });
+
+    it("should throw if content is not a flat array", () => {
+      const config = {
+        content: {
+          files: ["something"],
+        },
+      };
+
+      expect(() => withTailprops(config)).toThrow(/content/i);
+    });
   });
 });

@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`template literals strategy concatenates basic strings correctly 1`] = `
+"console.log("hello world");
+create_ssr_component(\`<div  \${add_attribute("class", "bg-red-500" + " " + "hover:bg-red-400", 0)}>ok</div>\`);"
+`;
+
+exports[`template literals strategy concatenates to existing classes 1`] = `"create_ssr_component(\`<div  \${add_attribute("class", "test-class" + " " + "hover:bg-red-400", 0)}>ok</div>\`);"`;
+
+exports[`template literals strategy handles complicated class expressions with different order 1`] = `"create_ssr_component(\`<div   \${add_attribute("class", (stylesState ? "some-custom-class" : "another-custom-class") + " " + "bg-red-500" + " " + "hover:dark:bg-blue-500", 0)}>ok</div>\`);"`;

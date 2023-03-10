@@ -3,13 +3,10 @@ import * as path from "path";
 import traverse from "@babel/traverse";
 import * as t from "@babel/types";
 import { readFileSync, writeFileSync } from "fs";
-import { createGracefulError } from "./error";
 import generate from "@babel/generator";
 
-export function applyTransformToConfig(extensions: string[]) {
-  const config = readConfigFile();
-
-  const ast = parser.parse(config.source, {
+export function applyTransformToConfig(source: string) {
+  const ast = parser.parse(source, {
     sourceType: "module",
   });
 
@@ -29,27 +26,27 @@ export function applyTransformToConfig(extensions: string[]) {
       try {
         t.assertExpression(right);
       } catch {
-        createGracefulError(
+        throw new Error(
           "Couldn't find module.exports in tailwind.config.js, aborting."
         );
       }
 
       path.node.right = t.callExpression(t.identifier("withTailprops"), [
-        t.arrayExpression(extensions.map((ext) => t.stringLiteral(ext))),
         right,
       ]);
     },
   });
 
-  const { code } = generate(ast);
+  const updated = generate(ast).code;
 
-  writeFileSync(
-    path.join(process.cwd(), config.file),
-    `const { withTailprops } = require("tailprops");\n${code}`
-  );
+  return `const { withTailprops } = require("tailprops");\n${updated}`;
 }
 
-function readConfigFile() {
+export function overwriteConfigFile(source: string, fileName: string) {
+  writeFileSync(path.join(process.cwd(), fileName), source);
+}
+
+export function readConfigFile() {
   try {
     const source = readFileSync(
       path.join(process.cwd(), "tailwind.config.js"),
@@ -58,7 +55,7 @@ function readConfigFile() {
       }
     );
 
-    return { source, file: "tailwind.config.js" };
+    return { source, fileName: "tailwind.config.js" };
   } catch {
     try {
       const source = readFileSync(
@@ -68,11 +65,56 @@ function readConfigFile() {
         }
       );
 
-      return { source, file: "tailwind.config.cjs" };
+      return { source, fileName: "tailwind.config.cjs" };
     } catch {
-      createGracefulError(
+      throw new Error(
         "Couldn't find tailwind.config.js or tailwind.config.cjs. Make sure you're running this command in the root of your project."
       );
     }
   }
+}
+
+export function getActualConfigFromConfigSource(source: string) {
+  const ast = parser.parse(source, {
+    sourceType: "module",
+  });
+
+  let result;
+
+  traverse(ast, {
+    ObjectProperty(path) {
+      const { node } = path;
+
+      if (node.key.type === "Identifier" && node.key.name === "theme") {
+        t.assertObjectExpression(path.parent);
+
+        result = unsafeEvaluateObjectExpression(path.parent);
+      }
+    },
+  });
+
+  if (!result)
+    throw new Error("Couldn't find a config in tailwind.config file");
+
+  return result as Record<string, any>;
+}
+
+function unsafeEvaluateObjectExpression(expr: t.ObjectExpression) {
+  const object: Record<string, any> = {};
+
+  for (const property of expr.properties) {
+    if (t.isObjectProperty(property)) {
+      const { key, value } = property;
+
+      if (t.isIdentifier(key)) {
+        if (t.isObjectExpression(value)) {
+          object[key.name] = unsafeEvaluateObjectExpression(value);
+        } else if (t.isStringLiteral(value) || t.isNumericLiteral(value)) {
+          object[key.name] = value.value;
+        }
+      }
+    }
+  }
+
+  return object;
 }

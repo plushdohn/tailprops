@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`template literals strategy concatenates basic strings correctly 1`] = `
+"console.log("hello world");
+function Test() {
+  return \`<html><h1   class="bg-red-500 hover:bg-red-400">ciao</h1></html>\`;
+}"
+`;
+
+exports[`template literals strategy concatenates to existing classes 1`] = `
+"function Test() {
+  return \`<html><h1   class="test-class hover:bg-red-400">ciao</h1></html>\`;
+}"
+`;
+
+exports[`template literals strategy handles complicated class expressions with different order 1`] = `
+"function Test() {
+  return \`<html><h1  \${$$addAttribute((someState ? "test-class" : "another-class") + " " + "flex" + " " + "2xl:flex-row", "class")}>ciao</h1></html>\`;
+}"
+`;

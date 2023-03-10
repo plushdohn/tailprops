@@ -5,34 +5,47 @@ import {
   joinPropertiesUsingModifiers,
 } from "./strategies/utils/generic";
 
-type Extension = "svelte" | "tsx" | "jsx";
+const EXTENSIONS = [
+  "html",
+  "svelte",
+  "vue",
+  "jsx",
+  "tsx",
+  "js",
+  "ts",
+  "astro",
+  "md",
+  "mdx",
+];
 
 /**
  * A utility function to add our transform
  * to the given Tailwind config.
  *
- * @param config A tailwind config
  * @param extension The file extension we check for tailprops
- * @returns config with a content transform for the given extension
+ * @returns config with the transform applied to each extensin
  */
 export function withTailprops(
-  extensions: Extension | Extension[],
-  config: Config
+  config: Config,
+  options: { extensions: string[] } = { extensions: EXTENSIONS }
 ): Config {
+  if (!Array.isArray(config.content)) {
+    throw new Error(
+      "withTailprops can't be used with custom 'content' options in Tailwind. Import the tailpropsTailwindTransform function and add it manually to for your file extensions as a content transform. For more info see https://tailwindcss.com/docs/content-configuration#transforming-source-files"
+    );
+  }
+
   return {
     ...config,
     content: {
       files: config.content as string[],
-      transform:
-        typeof extensions === "string"
-          ? { [extensions]: tailpropsTailwindTransform }
-          : extensions.reduce(
-              (acc, curr) => ({
-                ...acc,
-                [curr]: tailpropsTailwindTransform,
-              }),
-              {}
-            ),
+      transform: options.extensions.reduce(
+        (acc, curr) => ({
+          ...acc,
+          [curr]: tailpropsTailwindTransform,
+        }),
+        {}
+      ),
     },
   };
 }
@@ -57,7 +70,7 @@ export function tailpropsTailwindTransform(content: string): string {
         content.slice(tailprop.index + tailprop.contents.length);
     }
   } catch (err) {
-    console.log("Tailprops tw transform error:", err);
+    throw new Error("Tailprops tw transform error:" + (err as Error).message);
   }
 
   return content;

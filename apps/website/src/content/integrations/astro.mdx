@@ -4,19 +4,14 @@ description: Adding Tailprops to Astro
 sort: 4
 ---
 
-<Note kind="warning">
-  The Astro integration for now only supports the .astro files. Islands can't
-  use Talprops yet, but we are working on it.
-</Note>
-
 Make sure you added the Tailwind integration via `astro add tailwind` before continuing.
 
-## Adding Tailwind to Astro
+## Adding Tailprops to Astro
 
 Install Tailprops and the Rollup plugin as dev dependencies:
 
 ```bash
-npm install -D tailprops @tailprops/rollup-plugin
+npm install -D tailprops rollup-plugin-tailprops
 ```
 
 Add the plugin to your `astro.config.mjs`:
@@ -39,3 +34,18 @@ Finally generate the types and the Tailwind transform by running:
 ```bash
 npx tailprops init astro
 ```
+
+## Adding Astro integrations (islands)
+
+If you want to use Tailprops in Astro islands too you can do so by adding each integration to the Rollup plugin:
+
+```js
+vite: {
+  plugins: [tailpropsPlugin({ framework: "astro", integrations: ["react", "preact"] })],
+},
+```
+
+<Note kind="warning">
+  Keep in mind that for integrations to work they need to be supported by our
+  [Rollup plugin](/integrations/rollup).
+</Note>

@@ -1,8 +1,4 @@
 {
   "extends": "../tsconfig.base.json",
-  "include": [
-    "src",
-    "tailprops.d.ts",
-    "tailprops.d.ts"
-  ]
+  "include": ["src"]
 }

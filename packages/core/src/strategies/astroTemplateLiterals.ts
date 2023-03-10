@@ -1,3 +1,5 @@
+import * as parser from "@babel/parser";
+import generate from "@babel/generator";
 import {
   escapeDollarsInString,
   getTailwindModifiersInAttribute,
@@ -15,11 +17,12 @@ export function transpileUsingAstroTemplateLiterals(
   options: {
     classAttributeKeyword: string;
     attributeFunctionId: string;
+    generateSourceMaps?: boolean;
   } = {
     classAttributeKeyword: "class",
     attributeFunctionId: "$$addAttribute",
   }
-): string {
+) {
   const htmlTags = getHtmlTagsInsideTemplateLiterals(source);
 
   for (const tag of htmlTags.reverse()) {
@@ -29,7 +32,15 @@ export function transpileUsingAstroTemplateLiterals(
       source.slice(tag.end);
   }
 
-  return source;
+  const ast = parser.parse(source, { sourceType: "unambiguous" });
+
+  const newSource = generate(ast, { sourceMaps: options.generateSourceMaps });
+
+  return {
+    code: newSource.code,
+    map: newSource.map,
+    ast,
+  };
 }
 
 function transformHtmlTag(
