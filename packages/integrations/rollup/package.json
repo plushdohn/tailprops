@@ -1,6 +1,6 @@
 {
   "name": "rollup-plugin-tailprops",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Rollup plugin for Tailprops",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",

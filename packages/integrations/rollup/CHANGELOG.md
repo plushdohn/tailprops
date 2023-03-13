@@ -1,5 +1,11 @@
 # rollup-plugin-tailprops
 
+## 0.3.1
+
+### Patch Changes
+
+- 3ae4d1f: Removed disgusting workspace dependencies
+
 ## 0.3.0
 
 ### Minor Changes

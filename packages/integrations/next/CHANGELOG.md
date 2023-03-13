@@ -1,5 +1,13 @@
 # tailprops-next
 
+## 0.2.2
+
+### Patch Changes
+
+- 3ae4d1f: Removed disgusting workspace dependencies
+- Updated dependencies [3ae4d1f]
+  - tailprops-webpack-plugin@0.2.3
+
 ## 0.2.1
 
 ### Patch Changes

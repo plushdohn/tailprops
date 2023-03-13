@@ -1,5 +1,11 @@
 # tailprops-webpack-plugin
 
+## 0.2.3
+
+### Patch Changes
+
+- 3ae4d1f: Removed disgusting workspace dependencies
+
 ## 0.2.2
 
 ### Patch Changes
