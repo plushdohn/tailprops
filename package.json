@@ -11,7 +11,7 @@
     "dev": "turbo run dev",
     "test": "turbo run test",
     "coverage": "turbo run coverage",
-    "ci:version": "changeset version && pnpm install && git add .",
+    "ci:version": "changeset version && pnpm install --no-frozen-lockfile && git add .",
     "ci:publish": "turbo run build && changeset publish"
   },
   "devDependencies": {
