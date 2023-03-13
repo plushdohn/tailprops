@@ -21,7 +21,7 @@
     "coverage": "jest --coverage"
   },
   "dependencies": {
-    "tailprops-webpack-plugin": "workspace:^0.2.1"
+    "tailprops-webpack-plugin": "^0.2.2"
   },
   "peerDependencies": {
     "next": "^13.1.6"
