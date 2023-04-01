@@ -10,7 +10,7 @@ type Props = {
 export async function generateStaticParams() {
   const posts = getAllPosts("docs");
 
-  return posts.map((p) => ({ slug: [p.filename] }));
+  return [...posts.map((p) => ({ slug: [p.filename] })), { slug: [] }];
 }
 
 export default async function DocsPage({ params }: Props) {
